@@ -13,16 +13,15 @@ function App() {
   useEffect(() => {
     setIsLoading(true);
     api.getBooks().then((response) => {
-      console.log(response);
-      setBooks(response.results);
-      console.log(response.results);
+      setBooks(response.books);
+      console.log(response.books);
       setIsLoading(false);
     });
   }, []);
   return (
     <>
       <Header />
-      <Main />
+      <Main books={books} />
       <Footer />
     </>
   );

@@ -30,11 +30,11 @@ server.get('/book-list', async (req, res) => {
   const connection = await getDBConnection();
   const querySQL = 'SELECT * FROM bookslist';
   const [result] = await connection.query(querySQL);
-  res.json({
-    info: { count: result.length },
-    results: result,
-  });
+  console.log(result);
   connection.end();
+  res.json({
+    books: result,
+  });
 });
 
 const staticServer = './src/public-react';

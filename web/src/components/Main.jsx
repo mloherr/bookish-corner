@@ -1,12 +1,16 @@
+import PropTypes from 'prop-types';
 import BooksList from './BooksList';
-function Main() {
+
+function Main({ books }) {
   return (
     <main>
-      <ul>
-        <BooksList />
-      </ul>
+      <BooksList books={books} />
     </main>
   );
 }
+
+Main.propTypes = {
+  books: PropTypes.array,
+};
 
 export default Main;

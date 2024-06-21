@@ -1,0 +1,48 @@
+@import '../core/variables.scss';
+
+.bookData {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+
+    &__cover {
+        max-width: 300px;
+        min-height: 200px;
+        margin-bottom: 0;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+    }
+
+    &__title {
+        font-size: 1.3rem;
+        text-align: left;
+    }
+
+    &__author {
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    &__genre {
+        font-size: 0.7rem;
+        text-align: right;
+    }
+
+    &__isFavourite{
+        background-color: $darkOrange;
+        padding: 1rem;
+        border-radius: 50%;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-self: center;
+        color: $darkOrange
+    }
+}

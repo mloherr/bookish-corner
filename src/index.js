@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 require('dotenv').config();
 
@@ -36,5 +38,24 @@ server.get('/book-list', async (req, res) => {
   });
 });
 
-const staticServer = './src/public-react';
-server.use(express.static(staticServer));
+server.post('/sign-up', async (req, res) => {
+  try {
+    const connection = await getDBConnection();
+    const { userName, emailUser, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const querySQL =
+      'INSERT INTO users (userName, emailUser, hashedPassword) VALUES ( ?, ?, ?)';
+
+    await connection.query(querySQL, [userName, emailUser, hashedPassword]);
+    res.status(201).send({ message: 'User registered successfully!' });
+    connection.end();
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: 'Error registering user', error: error.message });
+  }
+});
+
+// const staticServer = './src/public-react';
+// server.use(express.static(staticServer));

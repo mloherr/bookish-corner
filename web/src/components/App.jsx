@@ -2,13 +2,20 @@ import '../scss/App.scss';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
+import Login from './Login';
+import Signup from './Signup';
 import api from '../services/api';
 import { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 // import PropTypes from "prop-types";
 
 function App() {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [userName, setUserName] = useState('');
+  const [emailUser, setEmailUser] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
@@ -18,10 +25,53 @@ function App() {
       setIsLoading(false);
     });
   }, []);
+
+  const handleChangeName = (value) => {
+    setUserName(value);
+  };
+
+  const handleChangeEmail = (value) => {
+    setEmailUser(value);
+  };
+
+  const handleChangePassword = (value) => {
+    setPassword(value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const newUserData = { userName, emailUser, password };
+      const response = await api.registerUser(newUserData);
+      console.log(response);
+      // Aquí puedes manejar la respuesta, por ejemplo, redirigir al usuario o mostrar un mensaje de éxito
+    } catch (error) {
+      console.error('Error registrando usuario:', error);
+    }
+  };
+
   return (
     <>
       <Header />
-      <Main books={books} />
+      <Routes>
+        <Route path="/" element={<Main books={books} />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/signup"
+          element={
+            <Signup
+              handleChangeName={handleChangeName}
+              userName={userName}
+              handleChangeEmail={handleChangeEmail}
+              emailUser={emailUser}
+              handleChangePassword={handleChangePassword}
+              password={password}
+              handleSubmit={handleSubmit}
+            />
+          }
+        />
+      </Routes>
+
       <Footer />
     </>
   );

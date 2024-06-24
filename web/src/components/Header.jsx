@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function Header() {
   return (
     <header className="header">
@@ -5,12 +7,12 @@ function Header() {
         <a className="header__menu--link" href="">
           Home
         </a>
-        <a className="header__menu--link" href="">
+        <Link to="/signup" className="header__menu--link">
           Registrarse
-        </a>
-        <a className="header__menu--link" href="">
+        </Link>
+        <Link to="/login" className="header__menu--link">
           Iniciar sesión
-        </a>
+        </Link>
       </nav>
     </header>
   );

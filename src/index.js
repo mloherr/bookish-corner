@@ -30,7 +30,6 @@ server.get('/book-list', async (req, res) => {
   const connection = await getDBConnection();
   const querySQL = 'SELECT * FROM bookslist';
   const [result] = await connection.query(querySQL);
-  console.log(result);
   connection.end();
   res.json({
     books: result,

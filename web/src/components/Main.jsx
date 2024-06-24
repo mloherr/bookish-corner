@@ -3,7 +3,7 @@ import BooksList from './BooksList';
 
 function Main({ books }) {
   return (
-    <main>
+    <main className="main">
       <BooksList books={books} />
     </main>
   );

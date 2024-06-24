@@ -13,11 +13,11 @@
 
         &--link {
             text-decoration: none;
-            color: $darkGreen;
+            color: $mediumGreen;
             font-weight: bold;
 
             &:hover{
-                text-decoration: underline solid 1px $darkGreen;
+                text-decoration: underline solid 1px $mediumGreen;
             } 
         }
     }

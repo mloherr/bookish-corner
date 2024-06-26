@@ -1,6 +1,6 @@
 @import '../core/variables.scss';
 
-.signupSection{
+.loginSection{
     background-color: $pink;
     display: flex;
     align-items: center;
@@ -10,12 +10,12 @@
     &__form {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: center;
         align-items: flex-start;
         background-color: $eucalyptus;
         width: 40%;
         padding: 8rem;
-        gap: 0.7rem;
+        gap: 0.5rem;
         height: 34.6rem;
 
 

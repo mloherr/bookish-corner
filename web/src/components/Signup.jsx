@@ -1,5 +1,6 @@
 import video from '../images/bookVideo.mp4';
 import PropTypes from 'prop-types';
+
 function Signup({
   handleChangeName,
   userName,

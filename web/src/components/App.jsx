@@ -44,9 +44,19 @@ function App() {
       const newUserData = { userName, emailUser, password };
       const response = await api.registerUser(newUserData);
       console.log(response);
-      // Aquí puedes manejar la respuesta, por ejemplo, redirigir al usuario o mostrar un mensaje de éxito
     } catch (error) {
       console.error('Error registrando usuario:', error);
+    }
+  };
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const userData = { emailUser, password };
+      const response = await api.loginUser(userData);
+      console.log(response);
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
     }
   };
 
@@ -55,7 +65,18 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Main books={books} />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={
+            <Login
+              handleChangeEmail={handleChangeEmail}
+              emailUser={emailUser}
+              handleChangePassword={handleChangePassword}
+              password={password}
+              handleLogin={handleLogin}
+            />
+          }
+        />
         <Route
           path="/signup"
           element={

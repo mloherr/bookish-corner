@@ -38,10 +38,20 @@ const loginUser = (data) => {
     });
 };
 
+const getMyBooks = () => {
+  // Llamamos a la API
+  return fetch(`${URL}/my-books`)
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    });
+};
+
 const functionsToExport = {
   getBooks: getBooks,
   registerUser: registerUser,
   loginUser: loginUser,
+  getMyBooks: getMyBooks,
 };
 
 export default functionsToExport;

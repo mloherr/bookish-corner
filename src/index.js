@@ -43,7 +43,8 @@ const verifyToken = (token) => {
 };
 
 const authenticateToken = (req, res, next) => {
-  const token = req.headers['authorization'];
+  const authenticationHeader = req.headers['authorization'];
+  const token = authenticationHeader && authenticationHeader.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({ error: 'Token no proporcionado' });
@@ -66,6 +67,17 @@ server.get('/book-list', async (req, res) => {
   connection.end();
   res.json({
     books: result,
+  });
+});
+
+server.get('/my-books', authenticateToken, async (req, res) => {
+  const connection = await getDBConnection();
+  const querySQL =
+    'SELECT bookslist.* FROM bookslist JOIN users_has_bookslist ON bookslist.id = users_has_bookslist.fk_booksId WHERE users_has_bookslist.fk_usersId = 1';
+  const [result] = await connection.query(querySQL, [req.user.idUser]);
+  connection.end();
+  res.json({
+    myBooks: result,
   });
 });
 
@@ -114,8 +126,7 @@ server.post('/login', async (req, res) => {
 
     //Crear el token para enviar al front
     const token = generateToken(userForToken);
-    // localStorage.setItem('token', token);
-    res.status(200).json({ token, username: user.username, name: user.name });
+    res.status(200).json({ token, username: user.nameUser });
   }
 });
 

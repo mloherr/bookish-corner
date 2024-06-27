@@ -2,30 +2,29 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
-function BookComponent({ bookData }) {
+function MyBook({ myBookData }) {
   return (
     <li className="bookData">
       <figure className="bookData__cover">
-        <img src={bookData.image} alt="" />
+        <img src={myBookData.image} alt="" />
       </figure>
-      <h2 className="bookData__title">{bookData.title}</h2>
-      <h3 className="bookData__author">{bookData.author}</h3>
-      <p className="bookData__genre">{bookData.genre}</p>
+      <h2 className="bookData__title">{myBookData.title}</h2>
+      <h3 className="bookData__author">{myBookData.author}</h3>
+      <p className="bookData__genre">{myBookData.genre}</p>
       <div className="bookData__isFavourite">
-        {bookData.isFavorite}
+        {myBookData.isFavorite}
         <FontAwesomeIcon
           icon={faHeart}
           className="bookData__isFavourite--icon"
           size="lg"
-          style={{ color: 'white', position: 'relative', right: '1.13rem' }}
+          style={{ color: 'red', position: 'relative', right: '1.13rem' }}
         />
       </div>
     </li>
   );
 }
 
-BookComponent.propTypes = {
-  bookData: PropTypes.object,
+MyBook.propTypes = {
+  myBookData: PropTypes.object,
 };
-
-export default BookComponent;
+export default MyBook;

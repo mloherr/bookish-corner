@@ -4,6 +4,7 @@ import Main from './Main';
 import Footer from './Footer';
 import Login from './Login';
 import Signup from './Signup';
+import MyBooksList from './MyBooksList';
 import api from '../services/api';
 import localStorage from '../services/localStorage';
 import { useState, useEffect } from 'react';
@@ -18,6 +19,9 @@ function App() {
   const [emailUser, setEmailUser] = useState('');
   const [password, setPassword] = useState('');
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [myBooks, setMyBooks] = useState([]);
+
   useEffect(() => {
     setIsLoading(true);
     api.getBooks().then((response) => {
@@ -26,6 +30,15 @@ function App() {
       setIsLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    api.getMyBooks().then((response) => {
+      setMyBooks(response.books);
+      console.log(response.books);
+      setIsLoading(false);
+    });
+  }, [isAuthenticated]);
 
   const handleChangeName = (value) => {
     setUserName(value);
@@ -59,6 +72,7 @@ function App() {
 
       if (response) {
         localStorage.set('token', response);
+        setIsAuthenticated(true);
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
@@ -67,7 +81,7 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Header isAuthenticated={isAuthenticated} />
       <Routes>
         <Route path="/" element={<Main books={books} />} />
         <Route
@@ -96,6 +110,7 @@ function App() {
             />
           }
         />
+        <Route path="/mybooks" element={<MyBooksList myBooks={myBooks} />} />
       </Routes>
 
       <Footer />

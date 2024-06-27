@@ -36,11 +36,6 @@ const loginUser = (data) => {
     .then((data) => {
       return data;
     });
-
-  // Guardar token en localStorage
-  // localStorage.setItem('token', data.token);
-  // localStorage.setItem('username', data.username);
-  // localStorage.setItem('name', data.name);
 };
 
 const functionsToExport = {

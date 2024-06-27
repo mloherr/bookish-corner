@@ -5,6 +5,7 @@ import Footer from './Footer';
 import Login from './Login';
 import Signup from './Signup';
 import api from '../services/api';
+import localStorage from '../services/localStorage';
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 // import PropTypes from "prop-types";
@@ -54,7 +55,11 @@ function App() {
     try {
       const userData = { emailUser, password };
       const response = await api.loginUser(userData);
-      console.log(response);
+      console.log('token?', response);
+
+      if (response) {
+        localStorage.set('token', response);
+      }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
     }

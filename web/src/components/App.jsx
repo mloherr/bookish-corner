@@ -20,7 +20,10 @@ function App() {
   const [password, setPassword] = useState('');
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState(localStorage.get('token') || '');
   const [myBooks, setMyBooks] = useState([]);
+
+  console.log('local', localStorage.get('token'));
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,13 +35,32 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
-    api.getMyBooks().then((response) => {
-      setMyBooks(response.books);
-      console.log(response.books);
-      setIsLoading(false);
-    });
-  }, [isAuthenticated]);
+    const storedToken = localStorage.get('token');
+    if (storedToken) {
+      setToken(storedToken);
+      setIsAuthenticated(true);
+    } else {
+      setToken('');
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      setIsLoading(true);
+      api
+        .getMyBooks()
+        .then((response) => {
+          setMyBooks(response.books);
+          console.log(response.books);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error al obtener mis libros:', error);
+          setIsLoading(false);
+        });
+    }
+  }, [token]);
 
   const handleChangeName = (value) => {
     setUserName(value);
@@ -65,17 +87,25 @@ function App() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    try {
-      const userData = { emailUser, password };
-      const response = await api.loginUser(userData);
-      console.log('token?', response);
+    const storedToken = localStorage.get('token');
+    if (storedToken) {
+      setToken(storedToken);
+      setIsAuthenticated(true);
+    } else {
+      try {
+        const userData = { emailUser, password };
+        const response = await api.loginUser(userData);
+        console.log('token?', response);
 
-      if (response) {
-        localStorage.set('token', response);
-        setIsAuthenticated(true);
+        if (response && response.token) {
+          localStorage.set('token', response.token);
+          setIsAuthenticated(true);
+          setToken(response.token);
+          await api.getMyBooks(response.token);
+        }
+      } catch (error) {
+        console.error('Error al iniciar sesión:', error);
       }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
     }
   };
 
@@ -110,7 +140,16 @@ function App() {
             />
           }
         />
-        <Route path="/mybooks" element={<MyBooksList myBooks={myBooks} />} />
+        <Route
+          path="/mybooks"
+          element={
+            <MyBooksList
+              myBooks={myBooks}
+              token={token}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        />
       </Routes>
 
       <Footer />

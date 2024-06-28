@@ -43,8 +43,8 @@ const verifyToken = (token) => {
 };
 
 const authenticateToken = (req, res, next) => {
-  const authenticationHeader = req.headers['authorization'];
-  const token = authenticationHeader && authenticationHeader.split(' ')[1];
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({ error: 'Token no proporcionado' });
@@ -70,15 +70,20 @@ server.get('/book-list', async (req, res) => {
   });
 });
 
-server.get('/my-books', authenticateToken, async (req, res) => {
-  const connection = await getDBConnection();
-  const querySQL =
-    'SELECT bookslist.* FROM bookslist JOIN users_has_bookslist ON bookslist.id = users_has_bookslist.fk_booksId WHERE users_has_bookslist.fk_usersId = 1';
-  const [result] = await connection.query(querySQL, [req.user.idUser]);
-  connection.end();
-  res.json({
-    myBooks: result,
-  });
+server.get('/mybooks', authenticateToken, async (req, res) => {
+  try {
+    const connection = await getDBConnection();
+    const querySQL =
+      'SELECT bookslist.* FROM bookslist JOIN users_has_bookslist ON bookslist.id = users_has_bookslist.fk_booksId WHERE users_has_bookslist.fk_usersId = ?';
+    const [result] = await connection.query(querySQL, [req.user.idUser]);
+    connection.end();
+    res.json({
+      myBooks: result,
+    });
+  } catch (error) {
+    console.error('Error fetching my books:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 server.post('/sign-up', async (req, res) => {
@@ -106,28 +111,24 @@ server.post('/login', async (req, res) => {
   const querySQL = 'SELECT * FROM users WHERE emailUser = ?';
 
   const [result] = await connection.query(querySQL, emailUser);
-  const user = result[0];
-
   connection.end();
-
-  const isPasswordCorrect =
-    user === null ? false : await bcrypt.compare(password, user.hashedPassword);
-
-  if (!(user && isPasswordCorrect)) {
-    return res.status(401).json({
-      error: 'Credenciales inválidas',
-    });
-  } else {
-    //datos User que tiene el token
-    const userForToken = {
-      username: user.userName,
-      id: user.idUser,
-    };
-
-    //Crear el token para enviar al front
-    const token = generateToken(userForToken);
-    res.status(200).json({ token, username: user.nameUser });
+  if (result.length === 0) {
+    return res.status(401).json({ error: 'Credenciales inválidas' });
   }
+  const user = result[0];
+  const isPasswordCorrect = await bcrypt.compare(password, user.hashedPassword);
+
+  if (!isPasswordCorrect) {
+    return res.status(401).json({ error: 'Credenciales inválidas' });
+  }
+
+  const userForToken = {
+    username: user.userName,
+    id: user.idUser,
+  };
+
+  const token = generateToken(userForToken);
+  res.status(200).json({ token });
 });
 
 // const staticServer = './src/public-react';

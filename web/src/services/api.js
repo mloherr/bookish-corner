@@ -38,13 +38,23 @@ const loginUser = (data) => {
     });
 };
 
-const getMyBooks = () => {
-  // Llamamos a la API
-  return fetch(`${URL}/my-books`)
-    .then((response) => response.json())
-    .then((data) => {
-      return data;
+const getMyBooks = async (token) => {
+  console.log('Token enviado desde getMyBooks:', token);
+  try {
+    const response = await fetch(`${URL}/mybooks`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching my books:', error);
+    throw error;
+  }
 };
 
 const functionsToExport = {

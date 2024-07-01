@@ -2,10 +2,8 @@ import PropTypes from 'prop-types';
 import MyBook from './MyBook';
 
 function MyBooksList({ myBooks, token, isAuthenticated }) {
-  const localToken = token;
-
   if (!isAuthenticated) {
-    isAuthenticated = localToken ? true : false;
+    isAuthenticated = token ? true : false;
   }
 
   return (

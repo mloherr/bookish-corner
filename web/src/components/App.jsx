@@ -9,7 +9,6 @@ import api from '../services/api';
 import localStorage from '../services/localStorage';
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-// import PropTypes from "prop-types";
 
 function App() {
   const [books, setBooks] = useState([]);
@@ -19,8 +18,8 @@ function App() {
   const [emailUser, setEmailUser] = useState('');
   const [password, setPassword] = useState('');
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState(localStorage.get('token') || '');
+  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
   const [myBooks, setMyBooks] = useState([]);
 
   console.log('local', localStorage.get('token'));
@@ -46,22 +45,18 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (token) {
-      setIsLoading(true);
-      api
-        .getMyBooks()
-        .then((response) => {
-          setMyBooks(response.books);
-          console.log(response.books);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error al obtener mis libros:', error);
-          setIsLoading(false);
-        });
-    }
+    const fetchMyBooks = async () => {
+      if (token) {
+        try {
+          const data = await api.getMyBooks(token);
+          setMyBooks(data.myBooks);
+        } catch (error) {
+          console.error('Error fetching my books:', error);
+        }
+      }
+    };
+    fetchMyBooks();
   }, [token]);
-
   const handleChangeName = (value) => {
     setUserName(value);
   };
@@ -87,25 +82,15 @@ function App() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const storedToken = localStorage.get('token');
-    if (storedToken) {
-      setToken(storedToken);
+    try {
+      const response = await api.loginUser({ emailUser, password });
+      const token = response.token;
+      setToken(token);
+      localStorage.set('token', token);
       setIsAuthenticated(true);
-    } else {
-      try {
-        const userData = { emailUser, password };
-        const response = await api.loginUser(userData);
-        console.log('token?', response);
-
-        if (response && response.token) {
-          localStorage.set('token', response.token);
-          setIsAuthenticated(true);
-          setToken(response.token);
-          await api.getMyBooks(response.token);
-        }
-      } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      setIsAuthenticated(false);
     }
   };
 
@@ -156,10 +141,5 @@ function App() {
     </>
   );
 }
-
-// NombreDeMiComponente.propTypes = {
-//   nombreDeMiPropDeTipoStringOpcional: PropTypes.string,
-//   nombreDeMiPropDeTipoStringObligatoria: PropTypes.string.isRequired,
-// };
 
 export default App;

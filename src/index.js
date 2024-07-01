@@ -38,24 +38,29 @@ const verifyToken = (token) => {
     const decoded = jwt.verify(token, 'secreto');
     return decoded;
   } catch (err) {
+    console.error('Error verifying token:', err);
     return null;
   }
 };
 
 const authenticateToken = (req, res, next) => {
+  console.log('prueba funcion authenticate');
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
+  console.log('Token:', token);
 
   if (!token) {
     return res.status(401).json({ error: 'Token no proporcionado' });
   }
 
   const decoded = verifyToken(token);
+  console.log('Decoded token:', decoded);
 
   if (!decoded) {
     return res.status(401).json({ error: 'Token inválido' });
   }
 
+  console.log('req.user:', decoded);
   req.user = decoded;
   next();
 };
@@ -72,10 +77,11 @@ server.get('/book-list', async (req, res) => {
 
 server.get('/mybooks', authenticateToken, async (req, res) => {
   try {
+    console.log('User ID from token:', req.user.id);
     const connection = await getDBConnection();
     const querySQL =
       'SELECT bookslist.* FROM bookslist JOIN users_has_bookslist ON bookslist.id = users_has_bookslist.fk_booksId WHERE users_has_bookslist.fk_usersId = ?';
-    const [result] = await connection.query(querySQL, [req.user.idUser]);
+    const [result] = await connection.query(querySQL, [req.user.id]);
     connection.end();
     res.json({
       myBooks: result,
@@ -123,8 +129,8 @@ server.post('/login', async (req, res) => {
   }
 
   const userForToken = {
-    username: user.userName,
-    id: user.idUser,
+    username: user.username,
+    id: user.id,
   };
 
   const token = generateToken(userForToken);

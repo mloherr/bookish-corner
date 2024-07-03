@@ -129,8 +129,8 @@ server.post('/login', async (req, res) => {
   }
 
   const userForToken = {
-    username: user.username,
-    id: user.id,
+    username: user.userName,
+    id: user.idUser,
   };
 
   const token = generateToken(userForToken);

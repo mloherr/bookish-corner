@@ -21,8 +21,7 @@ function App() {
   const [token, setToken] = useState(localStorage.get('token') || '');
   const [isAuthenticated, setIsAuthenticated] = useState(!!token);
   const [myBooks, setMyBooks] = useState([]);
-
-  console.log('local', localStorage.get('token'));
+  console.log('myBooks APP', myBooks);
 
   useEffect(() => {
     setIsLoading(true);
@@ -98,7 +97,16 @@ function App() {
     <>
       <Header isAuthenticated={isAuthenticated} />
       <Routes>
-        <Route path="/" element={<Main books={books} />} />
+        <Route
+          path="/"
+          element={
+            <Main
+              books={books}
+              myBooks={myBooks}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        />
         <Route
           path="/login"
           element={

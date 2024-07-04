@@ -16,7 +16,9 @@ function Header({ isAuthenticated, handleLogOut }) {
             <Link to="/mybooks" className="header__menu--link">
               Mis libros
             </Link>
-            <a onClick={handleOut}>Cerrar Sesión</a>
+            <a className="header__menu--link" onClick={handleOut}>
+              Cerrar Sesión
+            </a>
           </>
         ) : (
           <>

@@ -42,6 +42,7 @@ function BookComponent({ bookData, myBooks, isAuthenticated }) {
 BookComponent.propTypes = {
   bookData: PropTypes.object,
   myBooks: PropTypes.array,
+  isAuthenticated: PropTypes.any,
 };
 
 export default BookComponent;

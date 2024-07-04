@@ -15,6 +15,7 @@
             text-decoration: none;
             color: $mediumGreen;
             font-weight: bold;
+            cursor: pointer;
 
             &:hover{
                 text-decoration: underline solid 1px $mediumGreen;

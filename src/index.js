@@ -137,5 +137,16 @@ server.post('/login', async (req, res) => {
   res.status(200).json({ token });
 });
 
+server.put('/logout', async (req, res) => {
+  const authHeader = req.headers['authorization'];
+  jwt.sign(authHeader, '', { expiresIn: 1 }, (logout, err) => {
+    if (logout) {
+      res.send({ message: 'Has sido desconectado' });
+    } else {
+      res.send({ message: 'Error' });
+    }
+  });
+});
+
 // const staticServer = './src/public-react';
 // server.use(express.static(staticServer));

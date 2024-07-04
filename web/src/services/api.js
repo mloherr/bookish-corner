@@ -57,11 +57,27 @@ const getMyBooks = async (token) => {
   }
 };
 
+const logOut = (token) => {
+  return fetch(`${URL}/logout`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log('Server response: ', responseData);
+      token = '';
+    });
+};
+
 const functionsToExport = {
   getBooks: getBooks,
   registerUser: registerUser,
   loginUser: loginUser,
   getMyBooks: getMyBooks,
+  logOut: logOut,
 };
 
 export default functionsToExport;

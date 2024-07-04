@@ -93,9 +93,15 @@ function App() {
     }
   };
 
+  const handleLogOut = async () => {
+    setToken('');
+    setIsAuthenticated(false);
+    localStorage.clear();
+  };
+
   return (
     <>
-      <Header isAuthenticated={isAuthenticated} />
+      <Header isAuthenticated={isAuthenticated} handleLogOut={handleLogOut} />
       <Routes>
         <Route
           path="/"

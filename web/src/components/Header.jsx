@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-function Header({ isAuthenticated }) {
+function Header({ isAuthenticated, handleLogOut }) {
+  const handleOut = () => {
+    handleLogOut();
+  };
   return (
     <header className="header">
       <nav className="header__menu">
@@ -13,7 +16,7 @@ function Header({ isAuthenticated }) {
             <Link to="/mybooks" className="header__menu--link">
               Mis libros
             </Link>
-            <a>Cerrar Sesión</a>
+            <a onClick={handleOut}>Cerrar Sesión</a>
           </>
         ) : (
           <>
@@ -32,6 +35,7 @@ function Header({ isAuthenticated }) {
 }
 Header.propTypes = {
   isAuthenticated: PropTypes.bool,
+  handleLogOut: PropTypes.func,
 };
 
 export default Header;

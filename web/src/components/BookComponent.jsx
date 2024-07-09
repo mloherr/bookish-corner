@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 
-function BookComponent({ bookData, myBooks, isAuthenticated }) {
+function BookComponent({ bookData, myBooks, isAuthenticated, handleAddFav }) {
   const [isFavBook, setIsFavBook] = useState(false);
 
   useEffect(() => {
@@ -13,6 +13,10 @@ function BookComponent({ bookData, myBooks, isAuthenticated }) {
       setIsFavBook(isFavorite);
     }
   }, [bookData.id, myBooks, isAuthenticated]);
+
+  const onAddFav = () => {
+    handleAddFav(bookData.id);
+  };
 
   return (
     <li className="bookData">
@@ -33,6 +37,7 @@ function BookComponent({ bookData, myBooks, isAuthenticated }) {
             position: 'relative',
             right: '1.13rem',
           }}
+          onClick={onAddFav}
         />
       </div>
     </li>
@@ -43,6 +48,7 @@ BookComponent.propTypes = {
   bookData: PropTypes.object,
   myBooks: PropTypes.array,
   isAuthenticated: PropTypes.any,
+  handleAddFav: PropTypes.func,
 };
 
 export default BookComponent;

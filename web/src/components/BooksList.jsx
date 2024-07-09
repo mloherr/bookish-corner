@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import BookComponent from './BookComponent';
 
-function BooksList({ books, myBooks, isAuthenticated }) {
+function BooksList({ books, myBooks, isAuthenticated, handleAddFav }) {
   return (
     <section className="booksSection">
       <ul className="booksSection__list">
@@ -12,6 +12,7 @@ function BooksList({ books, myBooks, isAuthenticated }) {
               bookData={book}
               myBooks={myBooks}
               isAuthenticated={isAuthenticated}
+              handleAddFav={handleAddFav}
             />
           );
         })}
@@ -24,5 +25,6 @@ BooksList.propTypes = {
   books: PropTypes.array,
   myBooks: PropTypes.array,
   isAuthenticated: PropTypes.bool,
+  handleAddFav: PropTypes.func,
 };
 export default BooksList;

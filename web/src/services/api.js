@@ -72,12 +72,28 @@ const logOut = (token) => {
     });
 };
 
+const addNewFavBook = (data) => {
+  return fetch(`${URL}/favbooks`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${data.token}`,
+    },
+    body: JSON.stringify({ bookId: data.bookId }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    });
+};
+
 const functionsToExport = {
   getBooks: getBooks,
   registerUser: registerUser,
   loginUser: loginUser,
   getMyBooks: getMyBooks,
   logOut: logOut,
+  addNewFavBook: addNewFavBook,
 };
 
 export default functionsToExport;

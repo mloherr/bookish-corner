@@ -99,6 +99,21 @@ function App() {
     localStorage.clear();
   };
 
+  const handleAddFav = async (bookId) => {
+    if (isAuthenticated) {
+      try {
+        const result = await api.addNewFavBook({ bookId, token });
+        console.log('Book added to favorites:', result);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    } else {
+      alert(
+        'Necesitas estar registrado/a para poder añadir libros a favoritos'
+      );
+    }
+  };
+
   return (
     <>
       <Header isAuthenticated={isAuthenticated} handleLogOut={handleLogOut} />
@@ -110,6 +125,7 @@ function App() {
               books={books}
               myBooks={myBooks}
               isAuthenticated={isAuthenticated}
+              handleAddFav={handleAddFav}
             />
           }
         />

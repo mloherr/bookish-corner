@@ -137,7 +137,7 @@ server.post('/login', async (req, res) => {
   res.status(200).json({ token });
 });
 
-server.put('/logout', async (req, res) => {
+server.put('/logout', authenticateToken, async (req, res) => {
   const authHeader = req.headers['authorization'];
   jwt.sign(authHeader, '', { expiresIn: 1 }, (logout, err) => {
     if (logout) {
@@ -148,5 +148,30 @@ server.put('/logout', async (req, res) => {
   });
 });
 
+server.post('/favbooks', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    console.log('User ID on add books', userId);
+    const { bookId } = req.body;
+
+    if (!bookId) {
+      return res.status(400).json({ error: 'Book ID is required' });
+    }
+
+    const connection = await getDBConnection();
+    const querySQL =
+      'INSERT INTO users_has_bookslist (fk_usersId, fk_booksId) VALUES (?, ?)';
+    const [result] = await connection.query(querySQL, [userId, bookId]);
+    connection.end();
+
+    res.json({
+      message: 'Book added to favorites successfully',
+      myBooks: result,
+    });
+  } catch (error) {
+    console.error('Error adding book to favorites:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 // const staticServer = './src/public-react';
 // server.use(express.static(staticServer));

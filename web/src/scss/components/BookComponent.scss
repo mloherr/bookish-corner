@@ -1,5 +1,9 @@
 @import '../core/variables.scss';
 
+.linkDetail{
+    text-decoration: none;
+    color: black;
+}
 .bookData {
     list-style-type: none;
     display: flex;
@@ -11,6 +15,7 @@
     background-color: $darkGreen;
     width: 20rem;
     height: 35rem;
+
    
  
 

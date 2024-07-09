@@ -5,10 +5,11 @@ import Footer from './Footer';
 import Login from './Login';
 import Signup from './Signup';
 import MyBooksList from './MyBooksList';
+import BookDetail from './BookDetail';
 import api from '../services/api';
 import localStorage from '../services/localStorage';
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation, matchPath } from 'react-router-dom';
 
 function App() {
   const [books, setBooks] = useState([]);
@@ -114,6 +115,11 @@ function App() {
     }
   };
 
+  const { pathname } = useLocation();
+  const bookDetailRoute = matchPath('/book/:idBook', pathname);
+  const idBook = bookDetailRoute ? bookDetailRoute.params.idBook : null;
+  const bookDetailData = books.find((book) => book.id === parseInt(idBook));
+
   return (
     <>
       <Header isAuthenticated={isAuthenticated} handleLogOut={handleLogOut} />
@@ -163,6 +169,16 @@ function App() {
               token={token}
               isAuthenticated={isAuthenticated}
             />
+          }
+        />
+        <Route
+          path="/book/:idBook"
+          element={
+            bookDetailData ? (
+              <BookDetail bookDetailData={bookDetailData} />
+            ) : (
+              <p>El libro que buscas no existe 😅 </p>
+            )
           }
         />
       </Routes>

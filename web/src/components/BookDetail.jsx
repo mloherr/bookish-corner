@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-function BookDetail(bookDetailData) {
-  console.log('bookDetailData', bookDetailData);
-  const [bookData, setBookData] = useState(null);
+function BookDetail({ bookDetailData }) {
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (bookDetailData) {
-      console.log('Cargando datos:', bookDetailData);
-      setBookData(bookDetailData);
+      setIsLoading(false);
     }
   }, [bookDetailData]);
-
-  console.log('bookData', bookData);
+  console.log('bookDetailData', bookDetailData);
+  console.log('title', bookDetailData.title);
   return (
     <section className="sectionDetailData">
       <div className="sectionDetailData__returnHome">
@@ -20,19 +19,30 @@ function BookDetail(bookDetailData) {
           Volver a Inicio
         </Link>
       </div>
-      <div className="sectionDetailData__containerData">
-        <figure className="sectionDetailData__containerData--image">
-          <img src={bookData?.image} alt={bookData?.title} />
-        </figure>
-        <div className="sectionDetailData__containerData--info">
-          <h4>{bookData?.title}</h4>
-          <p>Sinopsis: {bookData?.resume}</p>
-          <p>Páginas: {bookData?.pages}</p>
-          <p>Idioma: {bookData?.language}</p>
+      {isLoading ? (
+        <p>Cargando información del libro...</p>
+      ) : (
+        <div className="sectionDetailData__containerData">
+          <figure className="sectionDetailData__containerData--image">
+            <img src={bookDetailData?.image} alt={bookDetailData?.title} />
+          </figure>
+          <div className="sectionDetailData__containerData--info">
+            <h4 className="bookInfo__title">{bookDetailData?.title}</h4>
+            <p className="bookInfo__resume--title">Sinopsis:</p>
+            <p>{bookDetailData?.resume}</p>
+            <p className="bookInfo__pages--title">Páginas: </p>
+            <p className="bookInfo__pages">{bookDetailData?.pages}</p>
+            <p className="bookInfo__language--title">Idioma:</p>
+            <p className="bookInfo__language"> {bookDetailData?.language}</p>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }
+
+BookDetail.propTypes = {
+  bookDetailData: PropTypes.object,
+};
 
 export default BookDetail;

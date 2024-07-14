@@ -28,12 +28,12 @@ server.listen(port, () => {
   console.log('Server is running on port ' + port);
 });
 
-const generateToken = (payload) => {
+const generateToken = (payload: any) => {
   const token = jwt.sign(payload, 'secreto', { expiresIn: '1h' });
   return token;
 };
 
-const verifyToken = (token) => {
+const verifyToken = (token: any) => {
   try {
     const decoded = jwt.verify(token, 'secreto');
     return decoded;
@@ -43,7 +43,7 @@ const verifyToken = (token) => {
   }
 };
 
-const authenticateToken = (req, res, next) => {
+const authenticateToken = (req: any, res: any, next: any) => {
   console.log('prueba funcion authenticate');
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -65,7 +65,7 @@ const authenticateToken = (req, res, next) => {
   next();
 };
 
-server.get('/book-list', async (req, res) => {
+server.get('/book-list', async (req: any, res: any) => {
   const connection = await getDBConnection();
   const querySQL = 'SELECT * FROM bookslist';
   const [result] = await connection.query(querySQL);
@@ -75,7 +75,7 @@ server.get('/book-list', async (req, res) => {
   });
 });
 
-server.get('/mybooks', authenticateToken, async (req, res) => {
+server.get('/mybooks', authenticateToken, async (req: any, res: any) => {
   try {
     console.log('User ID from token:', req.user.id);
     const connection = await getDBConnection();
@@ -92,7 +92,7 @@ server.get('/mybooks', authenticateToken, async (req, res) => {
   }
 });
 
-server.post('/sign-up', async (req, res) => {
+server.post('/sign-up', async (req: any, res: any) => {
   try {
     const connection = await getDBConnection();
     const { userName, emailUser, password } = req.body;
@@ -111,7 +111,7 @@ server.post('/sign-up', async (req, res) => {
   }
 });
 
-server.post('/login', async (req, res) => {
+server.post('/login', async (req: any, res: any) => {
   const connection = await getDBConnection();
   const { emailUser, password } = req.body;
   const querySQL = 'SELECT * FROM users WHERE emailUser = ?';
@@ -137,9 +137,9 @@ server.post('/login', async (req, res) => {
   res.status(200).json({ token });
 });
 
-server.put('/logout', authenticateToken, async (req, res) => {
+server.put('/logout', authenticateToken, async (req: any, res: any) => {
   const authHeader = req.headers['authorization'];
-  jwt.sign(authHeader, '', { expiresIn: 1 }, (logout, err) => {
+  jwt.sign(authHeader, '', { expiresIn: 1 }, (logout: any, err: any) => {
     if (logout) {
       res.send({ message: 'Has sido desconectado' });
     } else {
@@ -148,7 +148,7 @@ server.put('/logout', authenticateToken, async (req, res) => {
   });
 });
 
-server.post('/favbooks', authenticateToken, async (req, res) => {
+server.post('/favbooks', authenticateToken, async (req: any, res: any) => {
   try {
     const userId = req.user.id;
     console.log('User ID on add books', userId);

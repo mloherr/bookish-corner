@@ -1,13 +1,12 @@
 {
-  "name": "haiku-generator",
+  "name": "bookish-corner",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "publish-react": "cd web && npm run build && cd .. && rm -rf ./src/public-react && mv ./web/dist ./src/public-react"
+    "start": "ts-node api/index.ts",
+    "dev": "nodemon src/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -18,7 +17,8 @@
     "ejs": "^3.1.9",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.9.4"
+    "mysql2": "^3.9.4",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/node": "^20.14.10"
